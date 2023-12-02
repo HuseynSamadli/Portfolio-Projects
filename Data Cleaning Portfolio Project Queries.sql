@@ -1,6 +1,5 @@
 /*
-
-Cleaning Data in SQL Queries
+SQL クエリでのデータクリーニング
 
 */
 
@@ -10,7 +9,7 @@ From PortfolioProject.dbo.NashvilleHousing
 
 --------------------------------------------------------------------------------------------------------------------------
 
--- Standardize Date Format
+-- 日付のフォーマットを標準化
 
 
 Select saleDateConverted, CONVERT(Date,SaleDate)
@@ -20,7 +19,7 @@ From PortfolioProject.dbo.NashvilleHousing
 Update NashvilleHousing
 SET SaleDate = CONVERT(Date,SaleDate)
 
--- If it doesn't Update properly
+-- 正しく更新されない場合
 
 ALTER TABLE NashvilleHousing
 Add SaleDateConverted Date;
@@ -31,7 +30,7 @@ SET SaleDateConverted = CONVERT(Date,SaleDate)
 
  --------------------------------------------------------------------------------------------------------------------------
 
--- Populate Property Address data
+-- 物件住所データの補完
 
 Select *
 From PortfolioProject.dbo.NashvilleHousing
@@ -61,7 +60,7 @@ Where a.PropertyAddress is null
 
 --------------------------------------------------------------------------------------------------------------------------
 
--- Breaking out Address into Individual Columns (Address, City, State)
+-- 住所を個別の列に分割する（Address、City、State）
 
 
 Select PropertyAddress
@@ -143,7 +142,7 @@ From PortfolioProject.dbo.NashvilleHousing
 --------------------------------------------------------------------------------------------------------------------------
 
 
--- Change Y and N to Yes and No in "Sold as Vacant" field
+-- "Sold as Vacant" フィールドの 'Y' と 'N' を 'Yes' と 'No' に変更
 
 
 Select Distinct(SoldAsVacant), Count(SoldAsVacant)
@@ -175,7 +174,7 @@ SET SoldAsVacant = CASE When SoldAsVacant = 'Y' THEN 'Yes'
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Remove Duplicates
+-- 重複の削除
 
 WITH RowNumCTE AS(
 Select *,
@@ -207,7 +206,7 @@ From PortfolioProject.dbo.NashvilleHousing
 
 ---------------------------------------------------------------------------------------------------------
 
--- Delete Unused Columns
+-- 未使用の列の削除
 
 
 
@@ -235,11 +234,10 @@ DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress, SaleDate
 -----------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------
 
---- Importing Data using OPENROWSET and BULK INSERT	
+--- OPENROWSET および BULK INSERT を使用してデータをインポート	
 
---  More advanced and looks cooler, but have to configure server appropriately to do correctly
---  Wanted to provide this in case you wanted to try it
-
+-- より高度でかっこいいが、サーバーを適切に構成する必要があります
+-- 試してみたい場合に提供したかった
 
 --sp_configure 'show advanced options', 1;
 --RECONFIGURE;
@@ -262,7 +260,7 @@ DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress, SaleDate
 --GO 
 
 
----- Using BULK INSERT
+---- BULK INSERT の使用
 
 --USE PortfolioProject;
 --GO
@@ -274,28 +272,11 @@ DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress, SaleDate
 --GO
 
 
----- Using OPENROWSET
+---- OPENROWSET の使用
 --USE PortfolioProject;
 --GO
 --SELECT * INTO nashvilleHousing
 --FROM OPENROWSET('Microsoft.ACE.OLEDB.12.0',
 --    'Excel 12.0; Database=C:\Users\alexf\OneDrive\Documents\SQL Server Management Studio\Nashville Housing Data for Data Cleaning Project.csv', [Sheet1$]);
 --GO
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
